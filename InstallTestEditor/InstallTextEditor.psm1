@@ -1,16 +1,13 @@
-function Install-TextEditor($SetupFileLocation)   
-{
+function Install-TextEditor ($SetupFileLocation) {
     <#
     .Description
     This is a cmdlet that installs a text editor
     #>
-
     process {
-        $retryInstallCount = 10
+        $retryInstallCount = 1
         $output = $false
         try {
             if ($retryInstallCount -gt 0) {
-                Write-Output "$SetupFileLocation"
                 Write-Information "========================================================="
                 Write-Information "Installing Text Editor"
                 Write-Information "========================================================="
@@ -21,13 +18,16 @@ function Install-TextEditor($SetupFileLocation)
                 Write-Information ""
                 Start-Process -FilePath $SetupFileLocation -Verb runas -ArgumentList "/S" -Wait -ErrorAction Stop
                 Write-Information "Installation completed."
+
                 Write-Information ""
                 $output = $true
+                log "Installation completed." yellow
             }
         }
         catch {
             $output = $false
-            Write-Error "Notepadplus installation failed. Retry installation. $PSItem"
+            Write-Error "Notepadplus installation failed. Retry installation. $PItem"
+            log "Notepadplus installation failed. Retry installation. $PSItem" yellow
             Write-Information ""
             Install-TextEditor $SetupFileLocation
         }
